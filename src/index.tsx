@@ -1,13 +1,16 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
-import { Game, Home } from "@screens";
+import AppLoading from "expo-app-loading";
+
+import { AppBootstrap, Text } from "@components";
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Home />
-      <Game />
-    </View>
+    <AppBootstrap>
+      <View style={styles.container}>
+        <Text style={{ fontSize: 25 }}>Hello World</Text>
+      </View>
+    </AppBootstrap>
   );
 }
 
