@@ -1,24 +1,11 @@
-import React from "react";
-import { StyleSheet, View } from "react-native";
-import AppLoading from "expo-app-loading";
+import React, { ReactElement } from "react";
+import Navigator from "./config/Navigator";
+import { AppBootstrap } from "@components";
 
-import { AppBootstrap, Text } from "@components";
-
-export default function App() {
+export default function App(): ReactElement {
   return (
     <AppBootstrap>
-      <View style={styles.container}>
-        <Text style={{ fontSize: 25 }}>Hello World</Text>
-      </View>
+      <Navigator />
     </AppBootstrap>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
