@@ -2,11 +2,12 @@ import React, { ReactElement } from "react";
 import { SafeAreaView } from "react-native";
 import { Board, GradientBackground } from "@components";
 import styles from "./styles";
-import { BoardState, printFormattedBoard } from "@utils";
+import { BoardState, isTerminal, printFormattedBoard } from "@utils";
 
 export default function SinglePlayerGame(): ReactElement {
-  const b: BoardState = ["x", "o", "x", "x", "o", "x", "x", "o", "x"];
+  const b: BoardState = ["x", "o", "x", "x", "o", null, "x", "o", null];
   printFormattedBoard(b);
+  console.log(isTerminal(b));
 
   return (
     <GradientBackground>
