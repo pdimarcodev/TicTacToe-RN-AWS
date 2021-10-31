@@ -96,6 +96,7 @@ export default function SinglePlayerGame(): ReactElement {
           onCellPressed={(index) => handleOnCellPressed(index)}
           state={state}
           size={300}
+          gameResult={gameResult}
         />
       </SafeAreaView>
     </GradientBackground>
