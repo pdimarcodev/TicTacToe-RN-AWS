@@ -1,7 +1,5 @@
-import React, { ReactElement, useEffect, useRef, useState } from "react";
-import { SafeAreaView } from "react-native";
-import { Audio } from "expo-av";
-import * as Haptics from "expo-haptics";
+import React, { ReactElement, useEffect, useState } from "react";
+import { Button, Dimensions, SafeAreaView, Text, View } from "react-native";
 import { Board, GradientBackground } from "@components";
 import styles from "./styles";
 import {
@@ -12,6 +10,8 @@ import {
   Cell,
   useSounds,
 } from "@utils";
+
+const SCREEN_WIDTH = Dimensions.get("screen").width;
 
 export default function SinglePlayerGame(): ReactElement {
   const [state, setState] = useState<BoardState>([
@@ -91,13 +91,40 @@ export default function SinglePlayerGame(): ReactElement {
   return (
     <GradientBackground>
       <SafeAreaView style={styles.container}>
+        <View style={styles.difficulty}>
+          <Text>Difficulty: Hard</Text>
+          <View style={styles.results}>
+            <View style={styles.resultsBox}>
+              <Text style={styles.resultsTitle}>Win</Text>
+              <Text style={styles.resultsCount}>0</Text>
+            </View>
+            <View style={styles.resultsBox}>
+              <Text style={styles.resultsTitle}>Draws</Text>
+              <Text style={styles.resultsCount}>0</Text>
+            </View>
+            <View style={styles.resultsBox}>
+              <Text style={styles.resultsTitle}>Losses</Text>
+              <Text style={styles.resultsCount}>0</Text>
+            </View>
+          </View>
+        </View>
         <Board
           disabled={Boolean(isTerminal(state)) || turn !== "HUMAN"}
           onCellPressed={(index) => handleOnCellPressed(index)}
           state={state}
-          size={300}
+          size={SCREEN_WIDTH - 60}
           gameResult={gameResult}
         />
+        {gameResult && (
+          <View style={styles.modal}>
+            <Text style={styles.modalText}>
+              {getWinner(gameResult.winner) === "HUMAN" && "You Won"}
+              {getWinner(gameResult.winner) === "BOT" && "You Lost"}
+              {getWinner(gameResult.winner) === "DRAW" && "It's a Draw"}
+            </Text>
+            <Button onPress={() => {}} title="Play Again" />
+          </View>
+        )}
       </SafeAreaView>
     </GradientBackground>
   );

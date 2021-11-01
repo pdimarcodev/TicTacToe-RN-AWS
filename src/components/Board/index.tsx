@@ -3,6 +3,7 @@ import { View, TouchableOpacity } from "react-native";
 import Text from "../Text";
 import { BoardResult, BoardState } from "@utils";
 import BoardLine from "./BoardLine";
+import { styles } from "./styles";
 
 interface BoardProps {
   state: BoardState;
@@ -21,13 +22,13 @@ export default function Board({
 }: BoardProps): ReactElement {
   return (
     <View
-      style={{
-        width: size,
-        height: size,
-        backgroundColor: "green",
-        flexDirection: "row",
-        flexWrap: "wrap",
-      }}
+      style={[
+        styles.board,
+        {
+          width: size,
+          height: size,
+        },
+      ]}
     >
       {state.map((cell, index) => {
         return (
@@ -35,16 +36,11 @@ export default function Board({
             disabled={cell !== null || disabled}
             onPress={() => onCellPressed && onCellPressed(index)}
             key={index}
-            style={{
-              width: "33.33333%",
-              height: "33.33333%",
-              backgroundColor: "#fff",
-              borderWidth: 1,
-              alignItems: "center",
-              justifyContent: "center",
-            }}
+            style={[styles.cell, styles[`cell${index}` as "cell"]]}
           >
-            <Text style={{ fontSize: size / 8 }}>{cell}</Text>
+            <Text style={[styles.cellText, { fontSize: size / 7 }]}>
+              {cell}
+            </Text>
           </TouchableOpacity>
         );
       })}

@@ -1,6 +1,6 @@
 import { BoardResult } from "@utils";
-import React, { ReactElement, useMemo } from "react";
-import { View } from "react-native";
+import React, { ReactElement, useEffect, useMemo, useRef } from "react";
+import { Animated, View } from "react-native";
 import { styles } from "./styles";
 
 type BoardLineProps = {
@@ -14,40 +14,64 @@ const BoardLine = ({ size, gameResult }: BoardLineProps): ReactElement => {
     [size]
   );
 
+  const animationRef = useRef<Animated.Value>(new Animated.Value(0));
+
+  useEffect(() => {
+    Animated.timing(animationRef.current, {
+      toValue: 1,
+      duration: 700,
+      useNativeDriver: false,
+    }).start();
+  }, []);
+
   return (
     <>
       {gameResult && gameResult.column && gameResult.direction === "V" && (
-        <View
+        <Animated.View
           style={[
             styles.line,
             styles.vLine,
             {
               left: `${33.3333 * gameResult.column - 16.6666}%`,
+              height: animationRef.current.interpolate({
+                inputRange: [0, 1],
+                outputRange: ["0%", "100%"],
+              }),
             },
           ]}
-        ></View>
+        ></Animated.View>
       )}
       {gameResult && gameResult.row && gameResult.direction === "H" && (
-        <View
+        <Animated.View
           style={[
             styles.line,
             styles.hLine,
             {
               top: `${33.3333 * gameResult.row - 16.6666}%`,
+              width: animationRef.current.interpolate({
+                inputRange: [0, 1],
+                outputRange: ["0%", "100%"],
+              }),
             },
           ]}
-        ></View>
+        ></Animated.View>
       )}
       {gameResult && gameResult.diagonal && gameResult.direction === "D" && (
-        <View
+        <Animated.View
           style={[
             styles.line,
             styles.dLine,
             {
-              height: diagonalHeight,
+              height: animationRef.current.interpolate({
+                inputRange: [0, 1],
+                outputRange: [0, diagonalHeight],
+              }),
               transform: [
                 {
-                  translateY: -(diagonalHeight - size) / 2,
+                  translateY: animationRef.current.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [size / 2, -(diagonalHeight - size) / 2],
+                  }),
                 },
                 {
                   rotateZ: gameResult.diagonal === "MAIN" ? "-45deg" : "45deg",
@@ -55,7 +79,7 @@ const BoardLine = ({ size, gameResult }: BoardLineProps): ReactElement => {
               ],
             },
           ]}
-        ></View>
+        ></Animated.View>
       )}
     </>
   );

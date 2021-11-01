@@ -1,20 +1,19 @@
+import { colors } from "@utils";
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
   line: {
     position: "absolute",
-    backgroundColor: "#f03",
+    backgroundColor: colors.lightPurple,
   },
   vLine: {
-    width: 2,
-    height: "100%",
+    width: 4,
   },
   hLine: {
-    height: 2,
-    width: "100%",
+    height: 4,
   },
   dLine: {
-    width: 2,
+    width: 4,
     top: 0,
     left: "50%",
   },
