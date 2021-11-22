@@ -10,6 +10,7 @@ import {
   Cell,
   useSounds,
 } from "@utils";
+import { useSettings, difficulties } from "@contexts/settings-context";
 
 const SCREEN_WIDTH = Dimensions.get("screen").width;
 
@@ -30,7 +31,13 @@ export default function SinglePlayerGame(): ReactElement {
     Math.random() < 0.5 ? "HUMAN" : "BOT"
   );
   const [isHumanMaximizing, setIsHumanMaximizing] = useState<boolean>(true);
+  const [gamesCount, setGamesCount] = useState({
+    wins: 0,
+    losses: 0,
+    draws: 0,
+  });
   const playSound = useSounds();
+  const { settings } = useSettings();
   const gameResult = isTerminal(state);
 
   const insertCell = (cell: number, symbol: "x" | "o"): void => {
@@ -57,20 +64,25 @@ export default function SinglePlayerGame(): ReactElement {
     return "DRAW";
   };
 
+  const newGame = () => {
+    setState([null, null, null, null, null, null, null, null, null]);
+    setTurn(Math.random() < 0.5 ? "HUMAN" : "BOT");
+  };
+
   useEffect(() => {
     if (gameResult) {
       const winner = getWinner(gameResult.winner);
       if (winner === "HUMAN") {
         playSound("win");
-        alert("You won!");
+        setGamesCount({ ...gamesCount, wins: gamesCount.wins + 1 });
       }
       if (winner === "BOT") {
         playSound("loss");
-        alert("You lost!");
+        setGamesCount({ ...gamesCount, losses: gamesCount.losses + 1 });
       }
       if (winner === "DRAW") {
         playSound("draw");
-        alert("It's a draw!");
+        setGamesCount({ ...gamesCount, draws: gamesCount.draws + 1 });
       }
     } else if (turn === "BOT") {
       if (isEmpty(state)) {
@@ -81,7 +93,12 @@ export default function SinglePlayerGame(): ReactElement {
         setIsHumanMaximizing(false);
         setTurn("HUMAN");
       } else {
-        const best = getBestMove(state, !isHumanMaximizing, 0, -1);
+        const best = getBestMove(
+          state,
+          !isHumanMaximizing,
+          0,
+          parseInt(settings ? settings.difficulty : "-1")
+        );
         insertCell(best, isHumanMaximizing ? "o" : "x");
         setTurn("HUMAN");
       }
@@ -92,19 +109,22 @@ export default function SinglePlayerGame(): ReactElement {
     <GradientBackground>
       <SafeAreaView style={styles.container}>
         <View style={styles.difficulty}>
-          <Text>Difficulty: Hard</Text>
+          <Text>
+            Difficulty:{" "}
+            {settings ? difficulties[settings.difficulty] : "Impossible"}
+          </Text>
           <View style={styles.results}>
             <View style={styles.resultsBox}>
               <Text style={styles.resultsTitle}>Win</Text>
-              <Text style={styles.resultsCount}>0</Text>
+              <Text style={styles.resultsCount}>{gamesCount.wins}</Text>
             </View>
             <View style={styles.resultsBox}>
               <Text style={styles.resultsTitle}>Draws</Text>
-              <Text style={styles.resultsCount}>0</Text>
+              <Text style={styles.resultsCount}>{gamesCount.draws}</Text>
             </View>
             <View style={styles.resultsBox}>
               <Text style={styles.resultsTitle}>Losses</Text>
-              <Text style={styles.resultsCount}>0</Text>
+              <Text style={styles.resultsCount}>{gamesCount.losses}</Text>
             </View>
           </View>
         </View>
@@ -122,7 +142,7 @@ export default function SinglePlayerGame(): ReactElement {
               {getWinner(gameResult.winner) === "BOT" && "You Lost"}
               {getWinner(gameResult.winner) === "DRAW" && "It's a Draw"}
             </Text>
-            <Button onPress={() => {}} title="Play Again" />
+            <Button onPress={newGame} title="Play Again" />
           </View>
         )}
       </SafeAreaView>
