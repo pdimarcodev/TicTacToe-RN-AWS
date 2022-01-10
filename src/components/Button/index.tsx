@@ -1,16 +1,34 @@
 import React from "react";
-import { TouchableOpacity, TouchableOpacityProps } from "react-native";
+import {
+  ActivityIndicator,
+  TouchableOpacity,
+  TouchableOpacityProps,
+} from "react-native";
 import Text from "../Text";
 import { styles } from "./styles";
 
 interface ButtonProps extends TouchableOpacityProps {
   title: string;
+  loading?: boolean;
 }
 
-export default function Button({ title, style, ...props }: ButtonProps) {
+export default function Button({
+  loading,
+  title,
+  style,
+  ...props
+}: ButtonProps) {
   return (
-    <TouchableOpacity {...props} style={[styles.button, style]}>
-      <Text style={styles.title}>{title}</Text>
+    <TouchableOpacity
+      disabled={loading}
+      {...props}
+      style={[styles.button, style]}
+    >
+      {loading ? (
+        <ActivityIndicator color="#000" />
+      ) : (
+        <Text style={styles.title}>{title}</Text>
+      )}
     </TouchableOpacity>
   );
 }
