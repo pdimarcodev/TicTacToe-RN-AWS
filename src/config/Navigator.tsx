@@ -4,13 +4,14 @@ import {
   StackNavigationOptions,
 } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
-import { Home, Settings, SinglePlayerGame } from "@screens";
+import { Home, Settings, SinglePlayerGame, Login } from "@screens";
 import { colors } from "@utils";
 
 export type StackNavigatorParams = {
   Home: undefined;
   SinglePlayerGame: undefined;
   Settings: undefined;
+  Login: undefined;
 };
 
 const Stack = createStackNavigator<StackNavigatorParams>();
@@ -54,6 +55,7 @@ export default function Navigator(): ReactElement {
           }}
         />
         <Stack.Screen name="Settings" component={Settings} />
+        <Stack.Screen name="Login" component={Login} />
       </Stack.Navigator>
     </NavigationContainer>
   );
