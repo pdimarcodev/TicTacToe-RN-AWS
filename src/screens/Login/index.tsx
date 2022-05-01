@@ -1,10 +1,22 @@
 import { Button, GradientBackground, TextInput } from "@components";
 import React, { ReactElement, useRef, useState } from "react";
-import { Alert, ScrollView, TextInput as NativeTextInput } from "react-native";
+import {
+  Alert,
+  ScrollView,
+  Text,
+  TextInput as NativeTextInput,
+} from "react-native";
 import { Auth } from "aws-amplify";
 import { styles } from "./styles";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { StackNavigatorParams } from "@config/Navigator";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
-export default function Login(): ReactElement {
+type LoginProps = {
+  navigation: StackNavigationProp<StackNavigatorParams, "Login">;
+};
+
+export default function Login({ navigation }: LoginProps): ReactElement {
   const passwordRef = useRef<NativeTextInput | null>(null);
   const [form, setForm] = useState({
     username: "test",
@@ -21,10 +33,13 @@ export default function Login(): ReactElement {
     setLoading(true);
     const { username, password } = form;
     try {
-      const res = await Auth.signIn(username, password);
-      console.log(res);
+      await Auth.signIn(username, password);
+      navigation.navigate("Home");
     } catch (error) {
-      Alert.alert("Error!", error.message || "An error occurred!");
+      Alert.alert(
+        "Error!",
+        error instanceof Error ? error.message : "An error occurred!"
+      );
     }
     setLoading(false);
   };
@@ -52,6 +67,9 @@ export default function Login(): ReactElement {
           style={{ marginBottom: 30 }}
         />
         <Button loading={loading} title="Login" onPress={login} />
+        <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
+          <Text style={styles.registerLink}>Don&apos;t have an account?</Text>
+        </TouchableOpacity>
       </ScrollView>
     </GradientBackground>
   );

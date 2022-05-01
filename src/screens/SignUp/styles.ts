@@ -6,10 +6,14 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 30,
     paddingVertical: 40,
   },
-  registerLink: {
+  OTPInputBox: {
     color: colors.lightGreen,
-    textAlign: "center",
-    marginTop: 20,
-    textDecorationLine: "underline",
+    fontFamily: "DeliusUnicase_400Regular",
+    fontSize: 20,
+    borderWidth: 0,
+    borderRadius: 0,
+    backgroundColor: colors.purple,
+    borderBottomWidth: 1,
+    borderColor: colors.lightGreen,
   },
 });
